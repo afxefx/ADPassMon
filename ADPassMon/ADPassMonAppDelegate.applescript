@@ -461,7 +461,13 @@ Enable it now?" with icon 2 buttons {"No","Yes"} default button 2)
 
     -- Open Ticket Viewer
     on ticketViewer_(sender)
-        tell application "Ticket Viewer" to activate
+        display dialog "Please enter password to access the Ticket Viewer." default answer "" buttons {"Ok"} default button 1 with hidden answer
+        set theResult to text returned of the result
+        if theResult is short date string of (get current date) then
+            tell application "Ticket Viewer" to activate
+        else if theResult is not short date string of (get current date) then
+            beep 2
+        end if
     end ticketViewer_
     
     -- Test to see if we're on the domain
@@ -623,6 +629,9 @@ Enable it now?" with icon 2 buttons {"No","Yes"} default button 2)
 
     -- Need to handle Lion's kerberos differently from older OSes
     on doLionKerb_(sender)
+        display dialog "Please enter password to access the Ticket Viewer." default answer "" buttons {"Ok"} default button 1 with hidden answer
+        set theResult to text returned of the result
+        if theResult is short date string of (get current date) then
         try
             log "Testing for Kerberos ticket…"
             set kerb to do shell script "/usr/bin/klist -t"
@@ -643,6 +652,9 @@ Enable it now?" with icon 2 buttons {"No","Yes"} default button 2)
                 errorOut_(theError, 1)
             end if
         end try
+        else if theResult is not short date string of (get current date) then
+        beep 2
+    end if
     end doLionKerb_
 
     -- Runs when Yes of Lion kerberos renewal dialog (from above) is clicked.
